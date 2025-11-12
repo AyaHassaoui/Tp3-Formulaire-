@@ -1,38 +1,44 @@
+
 # 📱 Application Android – Formulaire & Récapitulatif
 
 ## 🎯 Objectif du TP
 Créer une application Android composée de **deux écrans** :
 
 - Un **formulaire** permettant de saisir :
-  - Nom et prénom
-  - E-mail
-  - Téléphone
-  - Adresse
-  - Ville
+  - Nom et prénom  
+  - E-mail  
+  - Téléphone  
+  - Adresse  
+  - Ville  
 
 - Un **écran récapitulatif** affichant les données saisies après validation.
 
 ### Ce TP permet d’apprendre :
-- la création d’interfaces XML (layouts)
-- l’utilisation de `EditText`, `Button` et `TextView`
-- la navigation entre deux activités avec un **Intent explicite**
-- le passage de données avec `putExtra()` et `getStringExtra()`
-- l’utilisation de `finish()` pour revenir à l’écran précédent
+- La création d’interfaces XML (layouts)  
+- L’utilisation de `EditText`, `Button` et `TextView`  
+- La navigation entre deux activités avec un **Intent explicite**  
+- Le passage de données avec `putExtra()` et `getStringExtra()`  
+- L’utilisation de `finish()` pour revenir à l’écran précédent  
 
 ---
 
 ## 🧱 Structure du projet Android Studio
+
+```
+
 app/
 ├─ java/com.example.formnav/
-│ ├─ MainActivity.java
-│ └─ Screen2Activity.java
+│   ├─ MainActivity.java
+│   └─ Screen2Activity.java
 ├─ res/
-│ ├─ layout/
-│ │ ├─ activity_main.xml
-│ │ └─ activity_screen2.xml
-│ └─ values/
-│ └─ strings.xml
+│   ├─ layout/
+│   │   ├─ activity_main.xml
+│   │   └─ activity_screen2.xml
+│   └─ values/
+│       └─ strings.xml
 └─ AndroidManifest.xml
+
+````
 
 ---
 
@@ -42,9 +48,9 @@ app/
 3. Nom du projet : **FormNav**  
 4. Langage : **Java**  
 5. Minimum SDK : **24 ou supérieur**  
-6. Cliquer sur **Finish**
+6. Cliquer sur **Finish**  
 
-> Android Studio crée automatiquement la structure du projet et la classe `MainActivity`.
+> Android Studio crée automatiquement la structure du projet.
 
 ---
 
@@ -69,19 +75,19 @@ Ajouter un bouton **“Envoyer”** pour lancer la seconde activité.
 ---
 
 ## 📄 Étape 3 – Interface du Récapitulatif (`activity_screen2.xml`)
-Créer une interface pour **afficher les informations saisies**.
+Créer une interface pour **afficher les informations saisies** :
 
-- Un `TextView` principal affiche le texte formaté (Nom, Email, etc.)
-- Un bouton **“Retour”** ramène l’utilisateur au formulaire
-- Le tout est organisé verticalement avec un `LinearLayout` et du `padding`
+- Un `TextView` principal affiche le texte formaté  
+- Un bouton **“Retour”** pour revenir au formulaire  
+- Disposition en `LinearLayout` avec `padding`
 
 ---
 
 ## ⚙️ Étape 4 – Logique du Formulaire (`MainActivity.java`)
-1. Récupérer les vues (`EditText`, `Button`) avec `findViewById()`
-2. Lire les valeurs saisies lors du clic sur **“Envoyer”**
-3. Vérifier que les champs obligatoires (**Nom** et **Email**) ne sont pas vides
-4. Si tout est valide, créer un **Intent explicite** :
+1. Récupérer les vues (`EditText`, `Button`) avec `findViewById()`  
+2. Lire les valeurs saisies lors du clic sur **“Envoyer”**  
+3. Vérifier que les champs obligatoires (**Nom** et **Email**) ne sont pas vides  
+4. Si tout est valide, créer un **Intent explicite** :  
 
 ```java
 Intent i = new Intent(MainActivity.this, Screen2Activity.class);
@@ -91,35 +97,60 @@ i.putExtra("phone", sPhone);
 i.putExtra("adresse", sAdresse);
 i.putExtra("ville", sVille);
 startActivity(i);
-## 🧠 Étape 5 – Logique du Récapitulatif (Screen2Activity.java)
-
-- Récupérer l’Intent reçu depuis la première activité.  
-- Extraire les données envoyées à l’aide de `getStringExtra()`.  
-- Construire une chaîne de texte contenant toutes les informations :  
-  (nom, e-mail, téléphone, adresse, ville).  
-- Afficher le résultat dans le `TextView` prévu à cet effet.  
-- Gérer le clic du bouton **Retour** pour fermer l’activité et revenir au formulaire à l’aide de `finish()`.
+````
 
 ---
 
-## 🧾 Étape 6 – Déclaration dans AndroidManifest.xml
+## 🧠 Étape 5 – Logique du Récapitulatif (`Screen2Activity.java`)
 
-- Déclarer la seconde activité (`Screen2Activity`) dans le fichier **AndroidManifest.xml** pour que le système Android la reconnaisse.  
-- L’activité principale (`MainActivity`) reste marquée comme **LAUNCHER**, c’est-à-dire celle qui s’ouvre en premier.  
-- La seconde activité n’a pas besoin de filtre particulier : elle est simplement appelée depuis la première via un **Intent**.
+* Récupérer l’Intent reçu depuis la première activité
+* Extraire les données envoyées avec `getStringExtra()`
+* Construire un texte affichant : nom, e-mail, téléphone, adresse, ville
+* Afficher ces informations dans le `TextView`
+* Gérer le clic sur **Retour** avec :
+
+```java
+btnRetour.setOnClickListener(v -> finish());
+```
+
+---
+
+## 🧾 Étape 6 – Déclaration dans `AndroidManifest.xml`
+
+Déclarer les deux activités :
+
+```xml
+<application ...>
+    <activity android:name=".Screen2Activity" />
+
+    <activity
+        android:name=".MainActivity"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+</application>
+```
+
+> `MainActivity` est l’écran principal.
+> `Screen2Activity` est appelée via un Intent explicite.
 
 ---
 
 ## ▶️ Étape 7 – Test de l’application
 
-- Lancer le projet sur un **émulateur Android** ou un **téléphone réel**.  
-- Saisir les champs du formulaire et cliquer sur **Envoyer**.  
-- Vérifier que la seconde activité affiche correctement les informations saisies.  
-- Cliquer sur **Retour** pour revenir à la première activité.
+* Lancer l’application sur un **émulateur** ou un **téléphone réel**
+* Remplir les champs du formulaire
+* Cliquer sur **Envoyer**
+* Vérifier que les données s’affichent correctement dans l’écran récapitulatif
+* Cliquer sur **Retour** pour revenir au formulaire
 
 ---
 
+## 🎥 Vidéo de démonstration
 
-##🎥 Vidéo de démonstration :
-https://github.com/user-attachments/assets/a6e1d2d5-cce2-4324-b0cc-f75efa5207c5
+(https://github.com/user-attachments/assets/a6e1d2d5-cce2-4324-b0cc-f75efa5207c5)
+
 
